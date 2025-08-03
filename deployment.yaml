@@ -1,3 +1,4 @@
+# mysql-deployment.yaml - Kubernetes Manifest for MySQL Deployment & PVC, ConfigMap
 apiVersion: apps/v1
 kind: Deployment
 metadata:
