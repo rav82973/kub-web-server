@@ -10,8 +10,8 @@ spec:
   template:
     metadata:
       labels:
-        app: mysql 
-    spec: 
+        app: mysql
+    spec:
       containers:
       - name: mysql
         image: mysql:8.0
@@ -25,30 +25,26 @@ spec:
         - containerPort: 3306
         volumeMounts:
         - name: mysql-initdb
-          mountPath: /docker-entrypoint-initdb.d 
+          mountPath: /docker-entrypoint-initdb.d
       volumes:
       - name: mysql-initdb
         configMap:
-          name: mysql-initdb-config 
-
+          name: mysql-initdb-config
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-Service
+  name: mysql-service
 spec:
   ports:
   - port: 3306
-  selector: 
+  selector:
     app: mysql
-  
 ---
-
 apiVersion: v1
-kind: ConfigMap 
+kind: ConfigMap
 metadata:
-  name: mysql-initdb-config 
+  name: mysql-initdb-config
 data:
   init-db.sql: |-
     CREATE DATABASE IF NOT EXISTS shop;
@@ -65,3 +61,4 @@ data:
     ('Product A', 'Description A', 10.99),
     ('Product B', 'Description B', 20.99),
     ('Product C', 'Description C', 30.99);
+
