@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Price Tracker</title>
+    <script>
+        async function fetchPrice() {
+            const symbol = document.getElementById('symbol').value;
+            const response = await fetch('/get_price', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `symbol=${symbol}`
+            });
+            const data = await response.json();
+            if (data.error) {
+                document.getElementById('result').innerText = data.error;
+            } else {
+                document.getElementById('result').innerText = `${data.symbol}: $${data.price_usd}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Crypto Price Tracker</h1>
+    <p>Enter a cryptocurrency symbol (XRP, LINK, BTC, SOL, ETH):</p>
+    <input type="text" id="symbol" placeholder="e.g., BTC">
+    <button onclick="fetchPrice()">Get Price</button>
+    <p id="result"></p>
+</body>
+</html>

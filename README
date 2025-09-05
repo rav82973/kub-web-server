@@ -1,0 +1,117 @@
+# Crypto Price Tracker
+
+## Overview
+
+This repository contains a web application designed to retrieve real-time prices for selected cryptocurrencies, including XRP, LINK, BTC, SOL, and ETH. The application utilizes the CoinGecko API to fetch current prices in USD and logs each query in a SQLite database for record-keeping purposes. The backend is implemented using Flask, with a simple HTML frontend for user interaction. The application is containerized with Docker and configured for deployment on Kubernetes.
+
+## Features
+
+- User input form to query cryptocurrency prices by symbol.
+- Real-time price retrieval from the CoinGecko API.
+- Storage of queried prices and timestamps in a SQLite database.
+- Basic error handling for invalid symbols or API failures.
+- Containerization for easy deployment.
+- Kubernetes manifests for orchestration.
+
+## Technologies Used
+
+- **Backend**: Python 3.10 with Flask framework.
+- **Database**: SQLite for lightweight, file-based storage.
+- **API**: CoinGecko for cryptocurrency price data.
+- **Frontend**: HTML with embedded JavaScript for asynchronous requests.
+- **Containerization**: Docker.
+- **Orchestration**: Kubernetes.
+
+## Installation
+
+To set up the application locally, follow these steps:
+
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd crypto-price-app
+   ```
+
+2. Install Python dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+3. Initialize the database (automatically handled on startup, or manually via `sqlite3 prices.db < init-db.sql`).
+
+## Usage
+
+### Local Development
+
+1. Run the Flask application:
+   ```
+   python app.py
+   ```
+
+2. Access the application in a web browser at `http://localhost:5000`.
+
+3. Enter a valid cryptocurrency symbol (e.g., BTC) and click "Get Price" to view the current USD price.
+
+4. Query the database for logged prices using SQLite tools, for example:
+   ```
+   sqlite3 prices.db "SELECT * FROM prices;"
+   ```
+
+### Docker Container
+
+1. Build the Docker image:
+   ```
+   docker build -t crypto-price-app .
+   ```
+
+2. Run the container:
+   ```
+   docker run -p 5000:5000 crypto-price-app
+   ```
+
+3. Access the application at `http://localhost:5000`.
+
+## Deployment on Kubernetes
+
+1. Ensure a Kubernetes cluster is available (e.g., Minikube for local testing).
+
+2. Apply the Kubernetes manifests:
+   ```
+   kubectl apply -f k8s-deployment.yaml
+   ```
+
+3. Expose the service (for Minikube):
+   ```
+   minikube service crypto-price-service
+   ```
+
+4. For production environments, modify the Service type to `LoadBalancer` and configure persistent storage for the database using a PersistentVolumeClaim.
+
+## Database Schema
+
+The SQLite database (`prices.db`) includes a single table:
+
+- `prices`:
+  - `id`: INTEGER PRIMARY KEY AUTOINCREMENT
+  - `crypto_symbol`: TEXT NOT NULL
+  - `price_usd`: REAL NOT NULL
+  - `timestamp`: DATETIME NOT NULL
+
+## API Integration
+
+The application fetches data from the CoinGecko API endpoint: `https://api.coingecko.com/api/v3/simple/price`. Note that CoinGecko imposes rate limits (approximately 50 requests per minute). For high-traffic scenarios, implement caching or consider alternative APIs.
+
+## Limitations and Considerations
+
+- The application supports only the specified cryptocurrencies.
+- Database storage is ephemeral in the provided Kubernetes configuration; implement persistent volumes for data retention.
+- Security features such as authentication and HTTPS are not included in this basic implementation.
+- Error handling is minimal; enhance for production use.
+
+## Contributing
+
+Contributions are welcome. Please submit pull requests for bug fixes, enhancements, or additional features.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.

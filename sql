@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS prices (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    crypto_symbol TEXT NOT NULL,
+    price_usd REAL NOT NULL,
+    timestamp DATETIME NOT NULL
+);

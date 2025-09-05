@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crypto-price-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crypto-price-app
+  template:
+    metadata:
+      labels:
+        app: crypto-price-app
+    spec:
+      containers:
+      - name: crypto-price-app
+        image: crypto-price-app:latest  # Replace with your image if pushed to a registry
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - mountPath: /app/prices.db
+          name: db-storage
+      volumes:
+      - name: db-storage
+        emptyDir: {}  # For persistence, use PersistentVolume in production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crypto-price-service
+spec:
+  selector:
+    app: crypto-price-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: NodePort  # Change to LoadBalancer for cloud environments
